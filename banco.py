@@ -17,14 +17,10 @@ def consulta_banco(conta: int):
     pesquisa = conta - 1
     if pesquisa > len(dados): 
         print("Essa conta ainda não existe")
-        buscou = print("Crie sua conta!")
+        return print("Crie sua conta!")
     else:
-        nmr_conta = dados[pesquisa][0]
-        cliente = dados[pesquisa][1]
-        saldo = dados[pesquisa][2]
-        buscou = (nmr_conta, cliente, saldo)
-
-    return buscou 
+        return(dados[pesquisa][0], dados[pesquisa][1], dados[pesquisa][2])
+ 
 a = consulta_banco(123)
 print(a)
 
