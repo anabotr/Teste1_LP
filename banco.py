@@ -6,16 +6,29 @@ import banco_de_dados as bd
 
 contas = bd.carregar_contas_de_csv("C:/Users/lcone/.ipython/.vscode/lista1/contas22.csv")
 
-def consulta_banco(conta: int) -> tuple[conta, nome, saldo]:
-    dados = ()
-    for numero_conta, info_saldo in contas.items(): 
-        a = numero_conta 
-        b = info_saldo 
-        dados = (a,b)
-    return dados
- 
+def consulta_banco(conta: int):
+    dados = []
+    indice_conta = 1
+    indice_nome = 2 
+    indice_saldo = 3
+    for numero_conta, info_saldo in contas.items():
+        tupla = (numero_conta, info_saldo["cliente"], info_saldo["saldo"])
+        dados.append(tupla)
+    pesquisa = conta - 1
+    if pesquisa > len(dados): 
+        print("Essa conta ainda não existe")
+        buscou = print("Crie sua conta!")
+    else:
+        nmr_conta = dados[pesquisa][0]
+        cliente = dados[pesquisa][1]
+        saldo = dados[pesquisa][2]
+        buscou = (nmr_conta, cliente, saldo)
+
+    return buscou 
+a = consulta_banco(123)
+print(a)
 
 
 def criar_conta(numero_conta: str, nome_cliente: str) -> tuple[int, dict]:
-    #comparar se existe a conta já 
+     
     return aa
