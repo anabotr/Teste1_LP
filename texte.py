@@ -23,13 +23,13 @@ def carregar_contas_de_csv(caminho_arquivo: str) -> dict:
 
 def salvar_contas_para_csv(caminho_arquivo: str, contas: dict) -> None:
     with open(caminho_arquivo, "w") as file:
-        file.write("numero_conta, saldo, cliente\n")
+        file.write("numero_conta,cliente,saldo\n")
 
         for numero_conta, info_saldo in contas.items():
-            linha = f"{numero_conta},{info_saldo['saldo']},{info_saldo['cliente']}"
+            linha = f"{numero_conta},{info_saldo['cliente']},{info_saldo['saldo']}\n"
             file.write(linha)
     return
 
 
-teste= carregar_contas_de_csv("C:/Users/lcone/.ipython/.vscode/lista1/contas20.csv")
-salvar_contas_para_csv("C:/Users/lcone/.ipython/.vscode/lista1/contas20.csv", teste)
+teste= carregar_contas_de_csv("C:/Users/lcone/.ipython/.vscode/lista1/contas22.csv")
+salvar_contas_para_csv("C:/Users/lcone/.ipython/.vscode/lista1/contas22.csv", teste)
