@@ -1,4 +1,6 @@
-import csv 
+""" 
+Organiza as informações do csv
+"""
 
 def carregar_contas_de_csv(caminho_arquivo: str) -> dict:
     contas = {}
@@ -18,7 +20,7 @@ def carregar_contas_de_csv(caminho_arquivo: str) -> dict:
 
     except FileNotFoundError:
         contas["numero_conta"] = {"cliente": None, "saldo" : None}
-        print("Arquivo não encontrado, retornou um dicionário vazio", contas)
+        print("Arquivo não encontrado")
     return contas
 
 def salvar_contas_para_csv(caminho_arquivo: str, contas: dict) -> None:
@@ -28,8 +30,7 @@ def salvar_contas_para_csv(caminho_arquivo: str, contas: dict) -> None:
         for numero_conta, info_saldo in contas.items():
             linha = f"{numero_conta},{info_saldo['cliente']},{info_saldo['saldo']}\n"
             file.write(linha)
-    return
+    return 
 
-
-teste= carregar_contas_de_csv("C:/Users/lcone/.ipython/.vscode/lista1/contas22.csv")
+teste = carregar_contas_de_csv("C:/Users/lcone/.ipython/.vscode/lista1/contas22.csv")
 salvar_contas_para_csv("C:/Users/lcone/.ipython/.vscode/lista1/contas22.csv", teste)
