@@ -1,6 +1,9 @@
+#Foram criadas flags para definir se os loops devem ou não continuar rodando, sendo uma para o loop geral, e uma para cada tipo de usuário
 flag = True
 fgerente = False
 fcliente = False
+
+
 while flag:
     print("""Bem-vindo ao Banco Digital!\n
         Escolha o modo de operação:\n
