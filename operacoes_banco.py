@@ -1,5 +1,43 @@
 import banco_de_dados as bd  
+"""
+FALTA FAZER 
 
+#TODO: dar um jeito nos índices fora de ordem!
+
+DEPOSITAR(NUM CONTA, VALOR) -> TUPLA (BOOL, STR) 
+SACAR 
+SOMAR SALDOS GERAIS 
+IDENTIFAR CLIENTE MAIS RICO 
+SOMAR SALDOS EM LOTE
+SUBTRAIR SALDOS EM LOTE
+REALIZAR TRANSFERENCIA 
+
+FUNCAO TRATA STRING PARA TIRAR A VIRGULA E BOTAR PONTO
+"""
+
+
+
+#NOTE:PRONTAAAAAAAAAAAAAAAAAAAA
+def trata_float(string : str) -> str:
+    try:
+        valor = float(string)
+    except ValueError:
+        valor = string[::-1].replace(',', '.', 1)[::-1]
+    return f"{round(float(valor),2):.2f}"
+
+#NOTE:PRONTAAAAAAAAAAAAAAAAAAAA
+def saldo_suficiente(numero_conta: str, valor: str) -> bool:
+    dados_banco = consulta_dados()
+    numero_conta = int(numero_conta)
+    pesquisa = numero_conta - 1
+    if pesquisa > len(dados_banco): 
+        print("Essa conta ainda não existe")
+        return None
+    else:  
+        if float(dados_banco[pesquisa - 1][2]) >= float(valor):
+            return True
+        else:
+            return False
 
 #NOTE: PRONTAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 #NOTE:AUXILIAR!
@@ -17,7 +55,7 @@ def consulta_banco(numero_conta: str) -> tuple[str, str, str]:
     try:
         dados_banco = consulta_dados()
         numero_conta = int(numero_conta)
-        pesquisa = numero_conta - 1
+        pesquisa = numero_conta - 1 
         if pesquisa > len(dados_banco): 
             return None
         else:
@@ -53,3 +91,19 @@ def criar_conta(numero_conta: str, nome_cliente: str) -> tuple[int, dict]:
         print("Conta já existe!")
     return
 
+def consultar_saldo(numero_conta: str) -> float | None:
+    conta = bd.carregar_contas_de_csv()
+    numero_conta = int(numero_conta)
+    print("Seu saldo atual é de:" , conta[f"{numero_conta:04d}"]["saldo"])
+    return 
+
+def somar_saldos_gerais() -> float:
+    soma = 0
+    dados = consulta_dados() 
+    quantidade = len(dados)
+    for i in range(quantidade):
+       valor = dados[i][2]
+       valor = float(valor)
+       soma += valor
+    
+    return soma

@@ -52,6 +52,9 @@ def salvar_contas_para_csv(contas: dict, caminho_arquivo: str = "contas22.csv") 
     if contas != {}:
         with open(caminho_arquivo, "w") as file:
             file.write("numero_conta,cliente,saldo\n")
+            def chave_para_int(item):
+                return int(item[0])   # item[0] é a chave do dicionário
+            contas = dict(sorted(contas.items(), key=chave_para_int))
 
             for numero_conta, info_saldo in contas.items():
                 linha = f"{numero_conta},{info_saldo['cliente']},{info_saldo['saldo']}\n"
