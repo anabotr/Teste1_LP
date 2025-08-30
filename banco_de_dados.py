@@ -1,7 +1,4 @@
-""" 
-Organiza as informações do csv
-"""
-#NOTE: PRONTAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+
 def carregar_contas_de_csv(caminho_arquivo: str = "contas22.csv") -> dict:
     """
     Carrega o arquivo csv para um dicionário. O arquivo não pode ser vazio.
@@ -40,7 +37,7 @@ def carregar_contas_de_csv(caminho_arquivo: str = "contas22.csv") -> dict:
         contas = {}
     return contas
 
-#NOTE: PRONTAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+
 def salvar_contas_para_csv(contas: dict, caminho_arquivo: str = "contas22.csv") -> None:
     """Abre um arquivo csv, lê as linhas, e organiza os dados e formata pro modelo de dicionário especificado.
     Ele só executa se o arquivo recebido for não vazio.
