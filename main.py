@@ -3,6 +3,7 @@ flag = True
 fgerente = False
 fcliente = False
 
+import operacoes_banco as ope
 
 while flag:
     print("""Bem-vindo ao Banco Digital!\n
@@ -25,12 +26,30 @@ while flag:
             resp_gerente = input()
 
             if resp_gerente == '1':
-                print('olha o saldo total do banco ai')
+                total = ope.somar_saldos_gerais()
+                print(total)
             elif resp_gerente == '2':
-                print('oia ai o mais ricaço')
+                rico = ope.identificar_cliente_mais_rico()
+                print(rico)
             elif resp_gerente == '3':
+                numero_conta = []
+                deposito = []
                 print('coloca dindin ai pra mim')
-                fundos_add = input()
+                conta_deposito = input("Em qual conta?")
+                valor_deposito = input("Qual valor?")
+                numero_conta.append(conta_deposito)
+                deposito.append(valor_deposito)
+                print("Mais alguma conta?\n 1. SIM\n 2. NÃO")
+                resp_gerente3 = input()
+                while resp_gerente3 == '1': 
+                    conta_deposito = input("Em qual conta?")
+                    valor_deposito = input("Qual valor")
+                    numero_conta.append(conta_deposito)
+                    deposito.append(valor_deposito)
+                    resp_gerente3 = input("Mais alguma conta?\n 1. SIM\n 2. NÃO")
+                if resp_gerente3 != '1':
+                    pass
+                ope.somar_saldos_em_lote(numero_conta = numero_conta, deposito = deposito)
             elif resp_gerente == '4':
                 print('jesus ta tirando dinheiro')
                 fundos_rm = input()

@@ -105,5 +105,85 @@ def somar_saldos_gerais() -> float:
        valor = dados[i][2]
        valor = float(valor)
        soma += valor
-    
+    soma = round(soma, 2)
     return soma
+
+
+def somar_saldos_em_lote(**kwargs) -> int:
+    """Recebe como chave os numeros das contas e os valores a serem adicionados"""
+    conta = bd.carregar_contas_de_csv()
+    a = kwargs
+    contas = a["numero_conta"]
+    depositos = a["deposito"]
+
+    for i in contas:
+        if int(i) > 0:      
+            indice = contas.index(i)
+            depositos_corres = depositos[indice] 
+            a = conta[f"{int(i):04d}"]
+            saldo_original = conta[f"{int(i):04d}"]["saldo"] 
+            saldo_novo = float(saldo_original) + float(depositos_corres)
+            conta[f"{int(i):04d}"]["saldo"] = round(saldo_novo,2)
+            bd.salvar_contas_para_csv(conta)
+        else: 
+            pass
+    
+    print("As contas foram atualizadas com sucesso")
+
+    return 
+
+def subtrair_saldos_em_lote(**kwargs) -> int:
+    """Recebe como chave os numeros das contas e os valores a serem subtraidos"""
+    conta = bd.carregar_contas_de_csv()
+    a = kwargs
+    contas = a["numero_conta"]
+    saque = a["saque"]
+    lista_contas = 0 
+
+    for i in contas:
+        if int(i) > 0:
+            indice = contas.index(i)
+            saque_corres = saque[indice]
+            saldo_original = conta[f"{int(i):04d}"]["saldo"] 
+            a = conta[f"{int(i):04d}"]
+            saldo_novo = float(saldo_original) - float(saque_corres)
+            conta[f"{int(i):04d}"]["saldo"] = round(saldo_novo, 2)
+            if saldo_novo <= 0:
+                conta[f"{int(i):04d}"]["saldo"] = saldo_original
+                bd.salvar_contas_para_csv(conta)
+            else: 
+                lista_contas += 1
+            bd.salvar_contas_para_csv(conta)
+        else: 
+            pass
+
+    return f"{lista_contas} conta(s) tiveram o saldo removido com sucesso"
+
+def realizar_transferencia(conta_origem: str, conta_destino: str, valor: float) -> tuple[bool, str]:
+    conta = bd.carregar_contas_de_csv()
+    opera = True
+    erro1 = False
+    erro2 = False
+    try: 
+        saldo_conta_origem = conta[f"{int(conta_origem):04d}"]["saldo"]
+        saldo_conta_destino = conta[f"{int(conta_destino):04d}"]["saldo"]
+        if saldo_conta_origem < valor: 
+            erro1_descrição = "Operação não realizada, saldo insuficiente"
+            tupla = (erro1, erro1_descrição)
+        else: 
+            opera_descricao = "Operação realizada com sucesso"
+            saldo_novo_origem = (float(saldo_conta_origem) - float(valor))
+            saldo_novo_destino = (float(saldo_conta_destino) + float(valor))
+            conta[f"{int(conta_origem):04d}"]["saldo"] = round(float(saldo_novo_origem),2)
+            conta[f"{int(conta_destino):04d}"]["saldo"] = round(float(saldo_novo_destino),2)        
+            bd.salvar_contas_para_csv(conta)
+            tupla = (opera, opera_descricao)
+
+    except KeyError: 
+        erro2_descricao = "Operação não realizada, conta não existe"
+        tupla = (erro2, erro2_descricao)
+
+    return tupla
+
+#somar_saldos_em_lote(numero_conta = ["259", "1", "2"], deposito = ["1", "1", "1"] )
+
