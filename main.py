@@ -1,9 +1,14 @@
+import operacoes_banco as ope
+
+# FALTA COMENTAR: (O QUE É CADA ARQUIVO, CONFERIR NOMENCLATURAS E RETURN)
+# SFINX 
+# GIT PUSH 
+
+
 #Foram criadas flags para definir se os loops devem ou não continuar rodando, sendo uma para o loop geral, e uma para cada tipo de usuário
 flag = True
 fgerente = False
 fcliente = False
-
-import operacoes_banco as ope
 
 while flag:
     print("""Bem-vindo ao Banco Digital!\n
@@ -11,6 +16,7 @@ while flag:
         1 - Operações de Gerente\n
         2 - Operações de Cliente\n
         3 - Sair\n""")
+    print('-'*80)
     resposta = input()
 
     if resposta == "1":
@@ -23,79 +29,142 @@ while flag:
                 4 - Debitar fundos em lote\n
                 5 - Abrir uma nova conta no banco\n
                 6 - Voltar ao menu principal\n""")
+            print('-'*80)
             resp_gerente = input()
 
             if resp_gerente == '1':
                 total = ope.somar_saldos_gerais()
-                print(total)
+                print(f"R$:{total}")
+                print('-'*80)
+
             elif resp_gerente == '2':
                 rico = ope.identificar_cliente_mais_rico()
-                print(rico)
+                print(f"O cliente mais rico é {list(rico.values())[0]}")
+                print('-'*80)
+
             elif resp_gerente == '3':
                 numero_conta = []
                 deposito = []
-                print('coloca dindin ai pra mim')
-                conta_deposito = input("Em qual conta?")
-                valor_deposito = input("Qual valor?")
+                print('Insira os dados solicitados, quando acabar, deixe o campo conta vazio.')
+                print('-'*80)
+                conta_deposito = input("Conta: ")
                 numero_conta.append(conta_deposito)
-                deposito.append(valor_deposito)
-                print("Mais alguma conta?\n 1. SIM\n 2. NÃO")
-                resp_gerente3 = input()
-                while resp_gerente3 == '1': 
-                    conta_deposito = input("Em qual conta?")
-                    valor_deposito = input("Qual valor")
-                    numero_conta.append(conta_deposito)
+                while conta_deposito != "": 
+                    valor_deposito = ope.trata_float(input("Valor: "))
+                    print("-"*80)
                     deposito.append(valor_deposito)
-                    resp_gerente3 = input("Mais alguma conta?\n 1. SIM\n 2. NÃO")
-                if resp_gerente3 != '1':
-                    pass
-                ope.somar_saldos_em_lote(numero_conta = numero_conta, deposito = deposito)
+                    conta_deposito = input("Conta:")
+                    numero_conta.append(conta_deposito)
+                
+                numero = ope.somar_saldos_em_lote(numero_conta = numero_conta, deposito = deposito)
+                print(f"Operação realizada com sucesso, {numero} conta(s) modificadas")
+                print('-'*80)
+                
             elif resp_gerente == '4':
-                print('jesus ta tirando dinheiro')
-                fundos_rm = input()
+                numero_conta = []
+                saque = []
+                print('Insira os dados solicitados, quando acabar, deixe o campo conta vazio.')
+                print('-'*80)
+                conta_saque = input("Conta: ")
+                numero_conta.append(conta_saque)
+                while conta_saque != "": 
+                    valor_saque = ope.trata_float(input("Valor: "))
+                    print("-"*80)
+                    saque.append(valor_saque)
+                    conta_saque = input("Conta: ")
+                    numero_conta.append(conta_saque)
+                numero = ope.subtrair_saldos_em_lote(numero_conta = numero_conta, saque = saque)
+                print(f"Operação realizada com sucesso, {numero} conta(s) modificadas.")
+                print('-'*80)
+
             elif resp_gerente == '5':
-                print('abra essaconta')
+                print('Insira o número da conta:')
                 numero_conta = input()
+                print("Insira o Nome do cliente: ")
                 nome_cliente = input()
+                conta = ope.criar_conta(numero_conta, nome_cliente)
+                if conta != None: 
+                    print(f"Conta criada com sucesso! \"Numero da conta\": {conta[0]}, \"Cliente\": {conta[1]}"  )
+                    print('-'*80)
+                else: 
+                    print("Informações inválidas")
+
             elif resp_gerente == '6':
                 fgerente = False
+                print('-'*80)
+
             else:
                 print("Entrada inválida")
+                print('-'*80)
+
     elif resposta == "2":
         print("Digite o número da conta:")
         conta = input()
-        # verifica se a conta ta no banco de dados
-        if conta == 'false':
-            esta = False
+    
+        if ope.conta_in_bd(conta) != True: #quando deixa como true ele mostra o index value do carrega banco de dados e continua
             print("Erro: Conta inexistente.")
-
+            print('-'*80)
         else:
-            esta = True
-            while esta:
+            print('-'*80)
+            fcliente = True
+            while fcliente:
                 print("""Escolha uma operação:\n
                     1 - Consultar meu saldo\n
                     2 - Realizar um depósito\n
                     3 - Realizar um saque\n
                     4 - Realizar uma transferência\n
                     5 - Voltar ao menu principal\n""")
+                print('-'*80)
                 resp_cliente = input()
 
                 if resp_cliente == '1':
-                    print('oia o saldo ai')
+                    print("Seu saldo atual é de:" , ope.consultar_saldo(conta))
+                    print('-'*80)
                 if resp_cliente == '2':
-                    print("deposita essa grana ai")
-                    valor = input()
+                    print('Insira o valor do depósito: ')
+                    valor = ope.trata_float(input())
+                    if valor != None:
+                        operacao = ope.depositar(conta, valor)
+                        total = ope.consultar_saldo(conta)
+                        print(f"{operacao[1]}! Seu saldo atual é: {total}" )
+                    else: 
+                        print('Valor inválido')
+                    print('-'*80)
+
                 if resp_cliente == '3':
-                    print('saca o dindin')
-                    valor = input()
+                    print('Insira o valor do saque: ')
+                    valor = ope.trata_float(input())
+                    if valor != None:
+                        operacao = ope.sacar(conta, valor)
+                        total = ope.consultar_saldo(conta)
+                        print(f"{operacao[1]}! Seu saldo atual é: {total}" )
+                    else: 
+                        print('Valor inválido')
+                    print('-'*80)
+
                 if resp_cliente == '4':
-                    print('transfere pra eu')
+                    print("Insira a conta que receberá o depósito: ")
                     conta_destino = input()
-                    valor = input()
+                    if conta_destino.isnumeric() == True: 
+                        print("Insira o valor: ")
+                        valor = ope.trata_float(input())
+                        if valor == None: 
+                            print("Valor inválido")
+                        if valor != None: 
+                            tupla = ope.realizar_transferencia(conta_origem = conta, conta_destino=conta_destino, valor=valor)
+                            print(tupla[1])
+                    else: 
+                        print("Valor inválido")
+                    print('-'*80)
                 if resp_cliente == '5':
-                    esta = False
+                    fcliente = False
+                    print('-'*80)
     elif resposta == '3': 
         flag = False
+        print('-'*80)
     else:
-        print("Entrava inválida")
+        flag = True 
+        print("Entrada inválida, escolha novamente")
+        print('-'*80)
+
 
