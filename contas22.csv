@@ -1,5 +1,5 @@
 numero_conta,cliente,saldo
-0001,Ana,10.20
+0001,Ana,1570.10
 0002,Bruno,2522.55
 0003,Carlos,2171.62
 0004,Daniela,2314.96
@@ -120,7 +120,8 @@ numero_conta,cliente,saldo
 0119,Rodrigo,1185.64
 0120,Silvia,1487.73
 0130,lalalal,00.00
-0259,Larissa Lindona,0
+0259,Larissa Lindona,98439.56
 0556,pinho,0.0
 0800,rafael,205.25
 0900,banana,00.00
+1256,Teste,0.0

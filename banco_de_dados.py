@@ -43,7 +43,7 @@ def carregar_contas_de_csv(caminho_arquivo: str = "contas22.csv") -> dict:
 
 
 def salvar_contas_para_csv(contas: dict, caminho_arquivo: str = "contas22.csv") -> None:
-    """Abre um arquivo csv, lê as linhas, organiza os dados e formata em dicionário especificado.
+    """Abre um arquivo csv, lê as linhas, organiza os dados em ordem crescente, formata em dicionário especificado e então reescreve o documento csv.
     Ele só executa se o arquivo recebido for não vazio.
 
     Args:
