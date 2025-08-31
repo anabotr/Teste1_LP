@@ -1,6 +1,6 @@
 numero_conta,cliente,saldo
-0001,Ana,1914.56
-0002,Bruno,1919.55
+0001,Ana,10.20
+0002,Bruno,2522.55
 0003,Carlos,2171.62
 0004,Daniela,2314.96
 0005,Eduardo,1932.62
@@ -10,15 +10,15 @@ numero_conta,cliente,saldo
 0009,Igor,2463.71
 0010,Joana,2083.64
 0011,Kleber,1542.69
-0012,Larissa,1267.76
+0012,Larissa,267.76
 0013,Marcos,2026.62
 0014,Natalia,2241.78
-0015,Thalis,200.00
+0015,Thalis,10000002000.0
 0016,Paula,1493.73
 0017,Quesia,1531.94
 0018,Ricardo,1412.78
 0019,Sofia,1809.62
-0020,Tiago,2322.66
+0020,Tiago,2522.66
 0021,Ursula,2145.57
 0022,Vitor,1692.61
 0023,Wagner,3216.61
@@ -120,4 +120,7 @@ numero_conta,cliente,saldo
 0119,Rodrigo,1185.64
 0120,Silvia,1487.73
 0130,lalalal,00.00
-0259,Larissa Lindona,00.00
+0259,Larissa Lindona,0
+0556,pinho,0.0
+0800,rafael,205.25
+0900,banana,00.00
