@@ -1,6 +1,6 @@
 import operacoes_banco as ope
 """
-Módulo de interação do banco com o usuário, tem seu comportamento guiado pelas escolhas do usuário no terminal. 
+Módulo de interação do banco com o usuário, seu comportamento é guiado pelas escolhas do usuário no terminal. 
 """
 
 #Foram criadas flags para definir se os loops devem ou não continuar rodando, sendo uma para o loop geral, e uma para cada tipo de usuário

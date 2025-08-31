@@ -16,7 +16,6 @@ def carregar_contas_de_csv(caminho_arquivo: str = "contas22.csv") -> dict:
     Raises:
         FileNotFoundError: É retornado quando o caminho do arquivo não existe.
         IndexError: É retornado quando o arquivo está com algum problema, vazio, por exemplo.
-
     """    
     contas = {}
     try: 
