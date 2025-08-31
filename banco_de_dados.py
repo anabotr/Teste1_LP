@@ -3,7 +3,6 @@ Contém funções para carregar os dados bancários do CSV para um dicionário e
 e para salvar o dicionário de volta no CSV. 
 """
 
-
 def carregar_contas_de_csv(caminho_arquivo: str = "contas22.csv") -> dict:
     """
     Carrega o arquivo csv para um dicionário. O arquivo não pode ser vazio.
