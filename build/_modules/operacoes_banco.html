@@ -1,0 +1,505 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="pt-BR" data-content_root="../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>operacoes_banco &mdash; Documentação MoneyNotFound 1.0.0</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=c0c8e3fa"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/translations.js?v=71a39b36"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Índice" href="../genindex.html" />
+    <link rel="search" title="Buscar" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            MoneyNotFound
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Pesquisar documentos" aria-label="Pesquisar documentos" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Menu de navegação">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../main.html">Main</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../banco_de_dados.html">Banco de Dados</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../operacoes_banco.html">Operações Banco</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Menu de navegação móvel" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">MoneyNotFound</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Navegação da página">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Código do módulo</a></li>
+      <li class="breadcrumb-item active">operacoes_banco</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Código-fonte para operacoes_banco</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Contém as funções principais realacionadas às operações bancárias. </span>
+<span class="sd">Dividido em funções auxiliares e funções solicitadas. </span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">banco_de_dados</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">bd</span>  
+
+<span class="c1">#Funções auxiliares</span>
+
+<div class="viewcode-block" id="consulta_dados">
+<a class="viewcode-back" href="../operacoes_banco.html#operacoes_banco.consulta_dados">[documentos]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">consulta_dados</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Pega o banco de dados e tranforma em uma lista de tuplas, para colocar todas as </span>
+<span class="sd">    informações em um mesmo nível (em termos de índice) e facilitar a manipulação.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        list[tuple[str,str,str]]: Lista de tuplas com os dados em forma de string, cada tupla é do formato</span>
+<span class="sd">        (numero_da_conta, nome_do_cliente, valor_da_conta)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">dados</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">contas_banco</span> <span class="o">=</span> <span class="n">bd</span><span class="o">.</span><span class="n">carregar_contas_de_csv</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">numero_conta</span><span class="p">,</span> <span class="n">info_saldo</span> <span class="ow">in</span> <span class="n">contas_banco</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">info_cada_conta</span> <span class="o">=</span> <span class="p">(</span><span class="n">numero_conta</span><span class="p">,</span> <span class="n">info_saldo</span><span class="p">[</span><span class="s2">&quot;cliente&quot;</span><span class="p">],</span> <span class="n">info_saldo</span><span class="p">[</span><span class="s2">&quot;saldo&quot;</span><span class="p">])</span>
+        <span class="n">dados</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">info_cada_conta</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">dados</span></div>
+
+
+<div class="viewcode-block" id="conta_in_bd">
+<a class="viewcode-back" href="../operacoes_banco.html#operacoes_banco.conta_in_bd">[documentos]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">conta_in_bd</span><span class="p">(</span><span class="n">numero_conta</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Verifica se a conta existe no dicionário do banco de dados. Ela deve ser composta apenas de números.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        numero_conta (str): Número da conta a ser procurada.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        bool: True, se a conta existe. False, se a conta não existe.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        ValueError: Se a conta não é convertível para número.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">contas_banco</span> <span class="o">=</span> <span class="n">bd</span><span class="o">.</span><span class="n">carregar_contas_de_csv</span><span class="p">()</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">numero_conta</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">numero_conta</span><span class="p">)</span>
+        <span class="k">if</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">numero_conta</span><span class="si">:</span><span class="s2">04d</span><span class="si">}</span><span class="s2">&quot;</span> <span class="ow">in</span> <span class="n">contas_banco</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">return</span> <span class="kc">False</span>
+    <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">False</span></div>
+
+    
+
+<div class="viewcode-block" id="acha_indice">
+<a class="viewcode-back" href="../operacoes_banco.html#operacoes_banco.acha_indice">[documentos]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">acha_indice</span><span class="p">(</span><span class="n">numero_conta</span><span class="p">:</span><span class="nb">str</span><span class="p">,</span> <span class="n">dados</span> <span class="o">=</span> <span class="n">consulta_dados</span><span class="p">())</span> <span class="o">-&gt;</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Encontra o índice da conta solicitada no dicionário do banco de dados atráves da lista de tuplas.</span>
+<span class="sd">    Podem ser passadas outras fontes de dados, mas o padrão é a lista que criamos com base no nosso banco de dados.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        numero_conta (str): Número da conta a ser procurada</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        int | None: Retorna o índice ou none, caso a conta não exista no banco de dados.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">conta_in_bd</span><span class="p">(</span><span class="n">numero_conta</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">indice</span><span class="p">,</span> <span class="p">(</span><span class="n">conta</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">dados</span><span class="p">):</span>
+            <span class="k">if</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">numero_conta</span><span class="p">)</span><span class="si">:</span><span class="s2">04d</span><span class="si">}</span><span class="s2">&quot;</span> <span class="o">==</span> <span class="nb">str</span><span class="p">(</span><span class="n">conta</span><span class="p">):</span>
+                <span class="k">return</span> <span class="n">indice</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span></div>
+
+
+<div class="viewcode-block" id="trata_float">
+<a class="viewcode-back" href="../operacoes_banco.html#operacoes_banco.trata_float">[documentos]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">trata_float</span><span class="p">(</span><span class="n">valor</span> <span class="p">:</span> <span class="nb">str</span><span class="o">|</span><span class="nb">float</span><span class="o">|</span><span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Trata as entradas numéricas, garantindo que os valores sigam o padrão do banco: apenas separador decimal, sendo ele um ponto final.</span>
+<span class="sd">    Se a entrada for vazia, retorna 0.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        string (str | float | int): Número a ser modificado, passado em forma de string, int ou float.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str: Valor inserido com ponto no separamento decimal e arredondamento para duas casas.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">valor</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span> <span class="ow">or</span> <span class="n">valor</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="mf">0.0</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">valor_final</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">valor</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">valor_final</span>
+    <span class="k">except</span><span class="p">:</span>
+        <span class="n">valor</span> <span class="o">=</span> <span class="n">valor</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+        <span class="n">tem_letra</span> <span class="o">=</span> <span class="nb">any</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">isalpha</span><span class="p">()</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">valor</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">tem_letra</span><span class="p">:</span> 
+            <span class="k">return</span> <span class="kc">None</span>
+        <span class="n">valor_final</span> <span class="o">=</span> <span class="n">valor</span><span class="p">[:</span><span class="o">-</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+        <span class="n">valor_final</span> <span class="o">+=</span> <span class="n">valor</span><span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">:]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">,</span> <span class="s1">&#39;.&#39;</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">valor_final</span><span class="p">),</span><span class="mi">2</span><span class="p">)</span><span class="si">:</span><span class="s2">02f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span></div>
+
+
+<div class="viewcode-block" id="saldo_suficiente">
+<a class="viewcode-back" href="../operacoes_banco.html#operacoes_banco.saldo_suficiente">[documentos]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">saldo_suficiente</span><span class="p">(</span><span class="n">numero_conta</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">valor</span><span class="p">:</span> <span class="nb">str</span><span class="o">|</span><span class="nb">float</span><span class="o">|</span><span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Verifica se a conta tem saldo suficiente para retirar algum valor específico.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        numero_conta (str): Número da conta a ter saldo modificado.</span>
+<span class="sd">        valor (str | float | int): Valor a ser debitado da conta.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        bool: Um valor booleano, True se é possível realizar a operação e False se não.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">dados_banco</span> <span class="o">=</span> <span class="n">consulta_dados</span><span class="p">()</span>
+    <span class="n">indice</span> <span class="o">=</span> <span class="n">acha_indice</span><span class="p">(</span><span class="n">numero_conta</span><span class="p">)</span>        
+    <span class="k">if</span> <span class="n">conta_in_bd</span><span class="p">(</span><span class="n">numero_conta</span><span class="p">):</span>  
+        <span class="k">if</span> <span class="nb">float</span><span class="p">(</span><span class="n">dados_banco</span><span class="p">[</span><span class="n">indice</span><span class="p">][</span><span class="mi">2</span><span class="p">])</span> <span class="o">&gt;=</span> <span class="nb">float</span><span class="p">(</span><span class="n">valor</span><span class="p">):</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span></div>
+
+        
+<div class="viewcode-block" id="atualiza_saldo">
+<a class="viewcode-back" href="../operacoes_banco.html#operacoes_banco.atualiza_saldo">[documentos]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">atualiza_saldo</span><span class="p">(</span><span class="n">numero_conta</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">valor</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Dado o número da conta e o novo valor do cliente, a função atualiza o arquivo do banco de dados com as novas informações.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        numero_conta (str): Número da conta para modificação do saldo.</span>
+<span class="sd">        valor (float): Novo saldo.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">dados_banco</span> <span class="o">=</span> <span class="n">consulta_dados</span><span class="p">()</span>
+    <span class="n">contas_banco</span> <span class="o">=</span> <span class="n">bd</span><span class="o">.</span><span class="n">carregar_contas_de_csv</span><span class="p">()</span>
+    <span class="n">indice</span> <span class="o">=</span> <span class="n">acha_indice</span><span class="p">(</span><span class="n">numero_conta</span><span class="p">)</span>        
+    <span class="k">if</span> <span class="n">conta_in_bd</span><span class="p">(</span><span class="n">numero_conta</span><span class="p">):</span>
+        <span class="n">contas_banco</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">numero_conta</span><span class="p">)</span><span class="si">:</span><span class="s2">04d</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;cliente&quot;</span><span class="p">:</span> <span class="n">dados_banco</span><span class="p">[</span><span class="n">indice</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="s2">&quot;saldo&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">float</span><span class="p">(</span><span class="n">valor</span><span class="p">)</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">}</span>
+        <span class="n">bd</span><span class="o">.</span><span class="n">salvar_contas_para_csv</span><span class="p">(</span><span class="n">contas_banco</span><span class="p">)</span>
+        
+    <span class="k">return</span> </div>
+
+
+
+<span class="c1">#Funções solicitadas</span>
+
+<div class="viewcode-block" id="criar_conta">
+<a class="viewcode-back" href="../operacoes_banco.html#operacoes_banco.criar_conta">[documentos]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">criar_conta</span><span class="p">(</span><span class="n">numero_conta</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">nome_cliente</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span><span class="nb">dict</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Abre uma conta no banco de dados com saldo inicial sendo 0 reais, com base no número da conta e nome do cliente fornecidos</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        numero_conta (str): Número da conta que será aberta.</span>
+<span class="sd">        nome_cliente (str): Nome do cliente para a abertura de conta.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        tuple[int,dict]: Tupla com dois elementos, o número da conta e um dicionário com </span>
+<span class="sd">        as chaves &quot;cliente&quot; e &quot;saldo&quot;, e seus respectivos valores.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">contas_banco</span> <span class="o">=</span> <span class="n">bd</span><span class="o">.</span><span class="n">carregar_contas_de_csv</span><span class="p">()</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">conta_in_bd</span><span class="p">(</span><span class="n">numero_conta</span><span class="p">):</span> 
+        <span class="k">if</span> <span class="n">numero_conta</span><span class="o">.</span><span class="n">isdigit</span><span class="p">():</span>
+            <span class="n">numero_conta</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">numero_conta</span><span class="p">)</span>
+            <span class="n">contas_banco</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">numero_conta</span><span class="si">:</span><span class="s2">04d</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;cliente&quot;</span><span class="p">:</span> <span class="n">nome_cliente</span><span class="p">,</span> <span class="s2">&quot;saldo&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="mi">00</span><span class="si">:</span><span class="s2">05.2f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)}</span>
+            <span class="n">bd</span><span class="o">.</span><span class="n">salvar_contas_para_csv</span><span class="p">(</span><span class="n">contas_banco</span><span class="p">)</span>
+            <span class="k">return</span> <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">numero_conta</span><span class="si">:</span><span class="s2">04d</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">),</span>  <span class="n">contas_banco</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">numero_conta</span><span class="si">:</span><span class="s2">04d</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span> 
+            <span class="k">return</span> <span class="kc">None</span></div>
+
+
+
+<div class="viewcode-block" id="depositar">
+<a class="viewcode-back" href="../operacoes_banco.html#operacoes_banco.depositar">[documentos]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">depositar</span><span class="p">(</span><span class="n">numero_conta</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">valor</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Depositar o valor inserido na conta especificada.</span>
+<span class="sd">    Valores negativos ou contas inexistentes serão notificados no caso de insucesso da operação.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        numero_conta (str): Número da conta a receber dinheiro.</span>
+<span class="sd">        valor (float): Valor que será depositado.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        tuple[bool,str]: Tupla na qual o primeiro elemento é um booleano que retorna True se a operação deu certo e False se não.</span>
+<span class="sd">        O segundo elemento é uma string com a descrição da operação/erro, se ocorreu.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">contas_banco</span> <span class="o">=</span> <span class="n">bd</span><span class="o">.</span><span class="n">carregar_contas_de_csv</span><span class="p">()</span>
+    <span class="n">verifica</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="k">if</span> <span class="n">valor</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">conta_in_bd</span><span class="p">(</span><span class="n">numero_conta</span><span class="p">):</span>
+            <span class="n">saldo_atual</span> <span class="o">=</span> <span class="n">contas_banco</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">numero_conta</span><span class="p">)</span><span class="si">:</span><span class="s2">04d</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">][</span><span class="s2">&quot;saldo&quot;</span><span class="p">]</span>
+            <span class="n">saldo_novo</span> <span class="o">=</span> <span class="nb">round</span><span class="p">((</span><span class="nb">float</span><span class="p">(</span><span class="n">saldo_atual</span><span class="p">)</span> <span class="o">+</span> <span class="nb">float</span><span class="p">(</span><span class="n">valor</span><span class="p">)),</span><span class="mi">2</span><span class="p">)</span>
+            <span class="n">atualiza_saldo</span><span class="p">(</span><span class="n">numero_conta</span><span class="p">,</span> <span class="n">saldo_novo</span><span class="p">)</span>
+            <span class="n">verifica</span> <span class="o">=</span> <span class="kc">True</span> 
+            <span class="n">motivo</span> <span class="o">=</span> <span class="s2">&quot;Operação concluída&quot;</span>
+        <span class="k">else</span><span class="p">:</span> 
+            <span class="n">motivo</span> <span class="o">=</span> <span class="s2">&quot;Erro: conta inexistente.&quot;</span>
+    <span class="k">else</span><span class="p">:</span> 
+        <span class="n">motivo</span> <span class="o">=</span> <span class="s2">&quot;Impossível operar com valores negativos&quot;</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">verifica</span><span class="p">,</span> <span class="n">motivo</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="sacar">
+<a class="viewcode-back" href="../operacoes_banco.html#operacoes_banco.sacar">[documentos]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">sacar</span><span class="p">(</span><span class="n">numero_conta</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">valor</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Sacar o valor inserido na conta especificada.</span>
+<span class="sd">    Valores negativos, saldos insuficientes ou contas inexistentes serão notificados no caso de insucesso da operação.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        numero_conta (str): Número da conta a receber dinheiro.</span>
+<span class="sd">        valor (float): Valor que será depositado.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        tuple[bool,str]: Tupla na qual o primeiro elemento é um booleano que retorna True se a operação deu certo e False se não.</span>
+<span class="sd">        O segundo elemento é uma string com a descrição da operação/erro, se ocorreu.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">contas_banco</span> <span class="o">=</span> <span class="n">bd</span><span class="o">.</span><span class="n">carregar_contas_de_csv</span><span class="p">()</span>
+    <span class="n">verifica</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">indice</span> <span class="o">=</span> <span class="n">acha_indice</span><span class="p">(</span><span class="n">numero_conta</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">valor</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">saldo_suficiente</span><span class="p">(</span><span class="n">numero_conta</span><span class="p">,</span> <span class="n">valor</span><span class="p">)</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">conta_in_bd</span><span class="p">(</span><span class="n">numero_conta</span><span class="p">):</span>
+                <span class="n">saldo_atual</span> <span class="o">=</span> <span class="n">contas_banco</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">numero_conta</span><span class="p">)</span><span class="si">:</span><span class="s2">04d</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">][</span><span class="s2">&quot;saldo&quot;</span><span class="p">]</span>
+                <span class="n">saldo_novo</span> <span class="o">=</span> <span class="nb">round</span><span class="p">((</span><span class="nb">float</span><span class="p">(</span><span class="n">saldo_atual</span><span class="p">)</span> <span class="o">-</span> <span class="nb">float</span><span class="p">(</span><span class="n">valor</span><span class="p">)),</span><span class="mi">2</span><span class="p">)</span>
+                <span class="n">atualiza_saldo</span><span class="p">(</span><span class="n">numero_conta</span><span class="p">,</span> <span class="n">saldo_novo</span><span class="p">)</span>
+                <span class="n">verifica</span> <span class="o">=</span> <span class="kc">True</span> 
+                <span class="n">motivo</span> <span class="o">=</span> <span class="s2">&quot;Operação concluída&quot;</span>
+            <span class="k">else</span><span class="p">:</span> 
+                <span class="n">motivo</span> <span class="o">=</span> <span class="s2">&quot;Conta inexistente.&quot;</span>
+        <span class="k">else</span><span class="p">:</span> 
+            <span class="n">motivo</span> <span class="o">=</span> <span class="s2">&quot;Erro: saldo insuficiente.&quot;</span>
+    <span class="k">else</span><span class="p">:</span> 
+        <span class="n">motivo</span> <span class="o">=</span> <span class="s2">&quot;Impossível operar com valores negativos&quot;</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">verifica</span><span class="p">,</span> <span class="n">motivo</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="consultar_saldo">
+<a class="viewcode-back" href="../operacoes_banco.html#operacoes_banco.consultar_saldo">[documentos]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">consultar_saldo</span><span class="p">(</span><span class="n">numero_conta</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Função que consulta o saldo de uma conta informada no banco de dados. Contas inexistentes retornam None.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        numero_conta (str): Número da conta com saldo a ser consultado.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        float | None: Retorna o valor que está na conta (float) ou None, se a conta não existir.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">conta_in_bd</span><span class="p">(</span><span class="n">numero_conta</span><span class="p">):</span>
+        <span class="n">conta</span> <span class="o">=</span> <span class="n">bd</span><span class="o">.</span><span class="n">carregar_contas_de_csv</span><span class="p">()</span>
+        <span class="n">numero_conta</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">numero_conta</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">conta</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">numero_conta</span><span class="si">:</span><span class="s2">04d</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">][</span><span class="s2">&quot;saldo&quot;</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span></div>
+
+    
+
+<div class="viewcode-block" id="somar_saldos_gerais">
+<a class="viewcode-back" href="../operacoes_banco.html#operacoes_banco.somar_saldos_gerais">[documentos]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">somar_saldos_gerais</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Soma o saldo de todas as contas existentes no banco.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        float: Soma de todos os valores dos saldos.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">soma_inicial</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">lista_contas</span> <span class="o">=</span> <span class="n">consulta_dados</span><span class="p">()</span> 
+    <span class="n">quantidade</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">lista_contas</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">cada_conta</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">quantidade</span><span class="p">):</span>
+       <span class="n">saldo</span> <span class="o">=</span> <span class="n">lista_contas</span><span class="p">[</span><span class="n">cada_conta</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span>
+       <span class="n">saldo_formatado</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">saldo</span><span class="p">)</span>
+       <span class="n">soma_inicial</span> <span class="o">+=</span> <span class="n">saldo_formatado</span>
+    <span class="n">soma_total</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">soma_inicial</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">soma_total</span></div>
+
+
+<div class="viewcode-block" id="identificar_cliente_mais_rico">
+<a class="viewcode-back" href="../operacoes_banco.html#operacoes_banco.identificar_cliente_mais_rico">[documentos]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">identificar_cliente_mais_rico</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">dict</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span> 
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Percorre todos os clientes e retorna os dados do cliente com mais dinheiro na conta do banco.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        dict|None: Se a conta existir, retorna um dicionário com as chaves &quot;cliente&quot; e &quot;saldo&quot; e seus respectivos valores.</span>
+<span class="sd">        Se a conta não existir, retorna None</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">lista_contas</span> <span class="o">=</span> <span class="n">consulta_dados</span><span class="p">()</span>
+    <span class="n">lista_saldos</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">dict_cliente_rico</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">quantidade</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">lista_contas</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">lista_contas</span> <span class="o">!=</span> <span class="p">[]:</span>
+        <span class="k">for</span> <span class="n">cada_conta</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">quantidade</span><span class="p">):</span> 
+            <span class="n">lista_saldos</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">lista_contas</span><span class="p">[</span><span class="n">cada_conta</span><span class="p">][</span><span class="mi">2</span><span class="p">]))</span>
+        <span class="n">localiza_max</span> <span class="o">=</span> <span class="n">lista_saldos</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">lista_saldos</span><span class="p">))</span>
+        <span class="n">maior_saldo</span> <span class="o">=</span> <span class="n">lista_contas</span><span class="p">[</span><span class="n">localiza_max</span><span class="p">]</span>   
+        <span class="n">dict_cliente_rico</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">maior_saldo</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;cliente&quot;</span> <span class="p">:</span> <span class="n">maior_saldo</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="s2">&quot;saldo&quot;</span> <span class="p">:</span> <span class="n">maior_saldo</span><span class="p">[</span><span class="mi">2</span><span class="p">]}</span>
+        <span class="k">return</span> <span class="n">dict_cliente_rico</span>
+    <span class="k">return</span></div>
+
+
+<div class="viewcode-block" id="somar_saldos_em_lote">
+<a class="viewcode-back" href="../operacoes_banco.html#operacoes_banco.somar_saldos_em_lote">[documentos]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">somar_saldos_em_lote</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Soma valores aos saldos de múltiplas contas de uma vez.</span>
+<span class="sd">    No kwargs, as chaves são os números das contas e os valores serão os montantes a serem adicionados.</span>
+<span class="sd">    Se forem inseridas contas inexistentes ou valores negativos, eles serão ignorados.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        int: Quantidade de contas que tiveram saldo atualizado.</span>
+<span class="sd">    &quot;&quot;&quot;</span>    
+
+    <span class="n">contar_contas</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">contas_banco</span> <span class="o">=</span> <span class="n">bd</span><span class="o">.</span><span class="n">carregar_contas_de_csv</span><span class="p">()</span>
+    <span class="n">info</span> <span class="o">=</span> <span class="n">kwargs</span>
+    <span class="n">lista_contas</span> <span class="o">=</span> <span class="n">info</span><span class="p">[</span><span class="s2">&quot;numero_conta&quot;</span><span class="p">]</span> 
+    <span class="n">valor_depositos</span> <span class="o">=</span> <span class="n">info</span><span class="p">[</span><span class="s2">&quot;deposito&quot;</span><span class="p">]</span> 
+
+
+    <span class="k">for</span> <span class="n">numero_conta</span> <span class="ow">in</span> <span class="n">lista_contas</span><span class="p">:</span> <span class="c1">#para cada item em contas vai verificar  </span>
+        <span class="k">if</span> <span class="n">conta_in_bd</span><span class="p">(</span><span class="n">numero_conta</span><span class="p">):</span>    <span class="c1">#se o número da conta existe</span>
+            <span class="n">indice_contas</span> <span class="o">=</span> <span class="n">lista_contas</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">numero_conta</span><span class="p">)</span> <span class="c1">#vai pegar o indece da lista contas</span>
+            <span class="n">numero_conta</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">numero_conta</span><span class="p">)</span><span class="o">.</span><span class="n">zfill</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+            <span class="n">depositos_corresp</span> <span class="o">=</span> <span class="n">trata_float</span><span class="p">(</span><span class="n">valor_depositos</span><span class="p">[</span><span class="n">indice_contas</span><span class="p">])</span>  <span class="c1">#vai pesquisar o mesmo </span>
+            <span class="k">if</span> <span class="n">depositos_corresp</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span> 
+                <span class="k">continue</span>
+            <span class="k">if</span> <span class="n">depositos_corresp</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">:</span> <span class="c1"># se o float for maior que zero </span>
+                <span class="n">info_colunas</span> <span class="o">=</span> <span class="n">contas_banco</span><span class="p">[</span><span class="n">numero_conta</span><span class="p">]</span> 
+                <span class="n">saldo_original</span> <span class="o">=</span> <span class="n">info_colunas</span><span class="p">[</span><span class="s2">&quot;saldo&quot;</span><span class="p">]</span> 
+                <span class="n">saldo_novo</span> <span class="o">=</span> <span class="nb">round</span><span class="p">((</span><span class="nb">float</span><span class="p">(</span><span class="n">saldo_original</span><span class="p">)</span> <span class="o">+</span> <span class="nb">float</span><span class="p">(</span><span class="n">depositos_corresp</span><span class="p">)),</span><span class="mi">2</span><span class="p">)</span>
+                <span class="n">atualiza_saldo</span><span class="p">(</span><span class="n">numero_conta</span><span class="p">,</span> <span class="n">saldo_novo</span><span class="p">)</span>
+                <span class="n">contar_contas</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">else</span><span class="p">:</span> 
+            <span class="k">pass</span>
+    
+    <span class="k">return</span> <span class="n">contar_contas</span></div>
+
+
+<div class="viewcode-block" id="subtrair_saldos_em_lote">
+<a class="viewcode-back" href="../operacoes_banco.html#operacoes_banco.subtrair_saldos_em_lote">[documentos]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">subtrair_saldos_em_lote</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Subtrai valores aos saldos de múltiplas contas de uma vez.</span>
+<span class="sd">    No kwargs, as chaves são os números das contas e os valores serão os montantes a serem adicionados.</span>
+<span class="sd">    Se uma conta tiver saldo menor do que o retirado, o saque falha para ela, mas continua para as outras.</span>
+<span class="sd">    Contas inexistentes, valores negativos ou tentativas de saque maiores que o saldo serão ignoradas.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        int: Quantidade de contas que tiveram saldo alterado com sucesso.</span>
+<span class="sd">    &quot;&quot;&quot;</span>    
+
+    <span class="n">contas_banco</span> <span class="o">=</span> <span class="n">bd</span><span class="o">.</span><span class="n">carregar_contas_de_csv</span><span class="p">()</span>
+    <span class="n">info</span> <span class="o">=</span> <span class="n">kwargs</span>
+    <span class="n">lista_contas</span> <span class="o">=</span> <span class="n">info</span><span class="p">[</span><span class="s2">&quot;numero_conta&quot;</span><span class="p">]</span>
+    <span class="n">valor_saques</span> <span class="o">=</span> <span class="n">info</span><span class="p">[</span><span class="s2">&quot;saque&quot;</span><span class="p">]</span>
+    <span class="n">numero_contas</span> <span class="o">=</span> <span class="mi">0</span> 
+
+    <span class="k">for</span> <span class="n">numero_conta</span> <span class="ow">in</span> <span class="n">lista_contas</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">conta_in_bd</span><span class="p">(</span><span class="n">numero_conta</span><span class="p">):</span>
+            <span class="n">indice_contas</span> <span class="o">=</span> <span class="n">lista_contas</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">numero_conta</span><span class="p">)</span>
+            <span class="n">numero_conta</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">numero_conta</span><span class="p">)</span><span class="o">.</span><span class="n">zfill</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+            <span class="n">saque_corresp</span> <span class="o">=</span> <span class="n">valor_saques</span><span class="p">[</span><span class="n">indice_contas</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">saque_corresp</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span> 
+                <span class="n">numero_contas</span> <span class="o">=</span> <span class="mi">0</span>
+                <span class="k">continue</span>
+            <span class="k">if</span> <span class="nb">int</span><span class="p">(</span><span class="n">saque_corresp</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">saldo_suficiente</span><span class="p">(</span><span class="n">numero_conta</span><span class="p">,</span> <span class="n">saque_corresp</span><span class="p">):</span> 
+                    <span class="n">indice_csv</span> <span class="o">=</span> <span class="n">acha_indice</span><span class="p">(</span><span class="n">numero_conta</span><span class="p">)</span>
+                    <span class="n">saldo_original</span> <span class="o">=</span> <span class="n">contas_banco</span><span class="p">[</span><span class="n">numero_conta</span><span class="p">][</span><span class="s2">&quot;saldo&quot;</span><span class="p">]</span> 
+                    <span class="n">saldo_novo</span> <span class="o">=</span> <span class="nb">round</span><span class="p">((</span><span class="nb">float</span><span class="p">(</span><span class="n">saldo_original</span><span class="p">)</span> <span class="o">-</span> <span class="nb">float</span><span class="p">(</span><span class="n">saque_corresp</span><span class="p">)),</span> <span class="mi">2</span><span class="p">)</span>
+                    <span class="n">contas_banco</span><span class="p">[</span><span class="n">numero_conta</span><span class="p">][</span><span class="s2">&quot;saldo&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">saldo_novo</span>
+                    <span class="n">numero_contas</span> <span class="o">+=</span> <span class="mi">1</span>
+                    <span class="n">atualiza_saldo</span><span class="p">(</span><span class="n">numero_conta</span><span class="p">,</span> <span class="n">saldo_novo</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">numero_contas</span></div>
+
+
+<div class="viewcode-block" id="realizar_transferencia">
+<a class="viewcode-back" href="../operacoes_banco.html#operacoes_banco.realizar_transferencia">[documentos]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">realizar_transferencia</span><span class="p">(</span><span class="n">conta_origem</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">conta_destino</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">valor</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Realiza uma transferência entre duas contas especificadas, com base no valor dado.</span>
+<span class="sd">    Contas inexistentes ou saldos insuficientes serão notificados no caso de insucesso.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        conta_origem (str): Conta de ondde o dinheiro será debitado.</span>
+<span class="sd">        conta_destino (str): Conta que recebrá o valor inserido.</span>
+<span class="sd">        valor (float): Quantidade transacionada.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        tuple[bool,str]: Tupla com dois elementos, o primeiro é True se a operação fucionou e False se deu errado. </span>
+<span class="sd">        O segundo elemento é uma string com a descrição da operação/erro, se ocorreu.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">operacao</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="k">if</span> <span class="n">conta_in_bd</span><span class="p">(</span><span class="n">conta_origem</span><span class="p">)</span> <span class="ow">and</span> <span class="n">conta_in_bd</span><span class="p">(</span><span class="n">conta_destino</span><span class="p">):</span>
+        <span class="n">resultado_saque</span> <span class="o">=</span> <span class="n">sacar</span><span class="p">(</span><span class="n">conta_origem</span><span class="p">,</span> <span class="n">valor</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">resultado_saque</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="kc">False</span><span class="p">:</span> 
+            <span class="n">operacao</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="n">ope_descri</span> <span class="o">=</span> <span class="n">resultado_saque</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">resultado_deposito</span> <span class="o">=</span> <span class="n">depositar</span><span class="p">(</span><span class="n">conta_destino</span><span class="p">,</span> <span class="n">valor</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">resultado_deposito</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
+                <span class="n">operacao</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="n">ope_descri</span> <span class="o">=</span> <span class="s2">&quot;Transferência realizada com sucesso&quot;</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">operacao</span> <span class="o">=</span> <span class="kc">False</span>
+                <span class="n">ope_descri</span> <span class="o">=</span> <span class="n">resultado_deposito</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">operacao</span><span class="p">,</span> <span class="n">ope_descri</span><span class="p">)</span> </div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Direitos autorais 2025, Ana Beatriz Botacim Rodrigues e Larissa Conerado Ribeiro.</p>
+  </div>
+
+  Compilado com <a href="https://www.sphinx-doc.org/">Sphinx</a> usando um
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">tema</a>
+    fornecido por <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
